@@ -1,12 +1,8 @@
-// Firebase App (the core Firebase SDK) is always required and
-// must be listed before other Firebase SDKs
 const firebase = require('firebase/app');
 // Add the Firebase products that you want to use
 require('firebase/auth');
 require('firebase/firestore');
 
-// TODO: Replace the following with your app's Firebase project configuration
-// For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
 const firebaseConfig = {
   apiKey: 'AIzaSyBO0AGrF3hfNdm0ddphcyZq2_ZgRfhnPFo',
   authDomain: 'user-login-773cc.firebaseapp.com',
@@ -26,28 +22,47 @@ const db = firebase.firestore();
 const signUpUser = userData => {
   return auth
     .createUserWithEmailAndPassword(userData.email, userData.password)
-    .then(user => {
-      console.log(user.user);
-    })
+    .then(res => res.user)
     .catch(error => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorMessage);
+      console.log(error.message);
+      return error.message;
+    });
+};
+// get current user
+const getCurrentUser = () => {
+  return auth.currentUser;
+};
+
+//login user
+const loginUser = userData => {
+  return auth
+    .signInWithEmailAndPassword(userData.email, userData.password)
+    .then(res => res.user)
+    .catch(error => {
+      console.log(error.message);
+      return error.message;
     });
 };
 
-//get current logged in user
-function authStateListener() {
-  const user = auth.currentUser;
+// sign out user
+const signOutUser = () => {
+  return auth
+    .signOut()
+    .then(res => res)
+    .catch(error => {
+      console.log(error.message);
+      return error.message;
+    });
+};
 
-  auth.onAuthStateChanged(function (user) {
-    if (user) {
-      console.log(user);
-    } else {
-      // No user is signed in.
-      console.log(user);
-    }
-  });
-}
+// state change listener
+auth.onAuthStateChanged(function (user) {
+  if (user) {
+    console.log('User logged in');
+  } else {
+    // No user is signed in.
+    console.log('User logged out');
+  }
+});
 
-module.exports = { signUpUser, authStateListener };
+module.exports = { signUpUser, getCurrentUser, loginUser, signOutUser };
