@@ -6,6 +6,7 @@ const {
   loginUser,
   signOutUser,
 } = require('./auth');
+const { getDB } = require('./firestore');
 
 router.post('/', async (req, res) => {
   const user = req.body;
@@ -25,6 +26,14 @@ router.get('/logout', (req, res) => {
   signOutUser();
   res.send('logout successful.');
 });
+
+router.get('/words', (req, res) => {
+  const print = collection => {
+    res.json(collection.map(item => item.data()));
+  };
+  getDB(print);
+});
+
 router.get('/', (req, res) => {
   const user = getCurrentUser();
   if (!user) {

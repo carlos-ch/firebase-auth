@@ -1,7 +1,6 @@
 const firebase = require('firebase/app');
 // Add the Firebase products that you want to use
 require('firebase/auth');
-require('firebase/firestore');
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBO0AGrF3hfNdm0ddphcyZq2_ZgRfhnPFo',
@@ -16,7 +15,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
-const db = firebase.firestore();
 
 //sign up user
 const signUpUser = userData => {
@@ -46,16 +44,10 @@ const loginUser = userData => {
 
 // sign out user
 const signOutUser = () => {
-  return auth
-    .signOut()
-    .then(res => res)
-    .catch(error => {
-      console.log(error.message);
-      return error.message;
-    });
+  return auth.signOut();
 };
 
-// state change listener
+// auth state change listener
 auth.onAuthStateChanged(function (user) {
   if (user) {
     console.log('User logged in');
