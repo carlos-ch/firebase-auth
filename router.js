@@ -28,10 +28,17 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/words', (req, res) => {
-  const print = collection => {
-    res.json(collection.map(item => item.data()));
-  };
-  getDB(print);
+  try {
+    const print = collection => {
+      if (collection === 'Missing or insufficient permissions.') {
+        return res.send(collection);
+      }
+      res.json(collection.map(item => item.data()));
+    };
+    getDB(print);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 router.get('/', (req, res) => {

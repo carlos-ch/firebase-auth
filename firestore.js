@@ -3,18 +3,13 @@ require('firebase/firestore');
 
 const db = firebase.firestore();
 
-// const print = collection => {
-//   collection.forEach(item => {
-//     console.log(item.data());
-//   });
-// };
-
 const getDB = cb => {
   db.collection('glossary')
     .get()
     .then(snapshot => {
       cb(snapshot.docs);
-    });
+    })
+    .catch(err => cb(err.message));
 };
 
 module.exports = { getDB };
